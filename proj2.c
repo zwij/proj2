@@ -5,9 +5,9 @@
 
 double taylor_log(double x, unsigned int n){
 
-    double s; //sum
-    double a; //actual value
-    unsigned int i = 1; //current iteration
+    double s;
+    double a;
+    unsigned int i = 1;
 
     if (x<1){
         s = -(1-x);
@@ -32,24 +32,23 @@ double taylor_log(double x, unsigned int n){
 double cfrac_log(double x, unsigned int n){
 
     double s = 0;
-    double a = (1 + x)/(1 - x);
+    double a = (x-1)/(x+1);
     unsigned int i = 1;
     unsigned int cn = n - 1;
     int j = n*2-1;
 
     while (i<n){
         s = ((cn*cn)*(a*a))/(j-s);
-        printf("s:%f, j:%d, cn:%d, i:%i, a:%f\n", s, j, cn, i, a);
         j -= 2;
         cn--;
         i++;
     }
 
     s = (2*a)/(j-s);
-    printf("s:%f, j:%d, cn:%d, i:%i, a:%f\n", s, j, cn, i, a);
 
     return s;
 }
+
 
 int main(int argc, char *argv[]){
 
@@ -62,6 +61,9 @@ int main(int argc, char *argv[]){
             printf("       log(%g) = %.12g\n cfrac_log(%g) = %.12g\ntaylor_log(%g) = %.12g\n", x, log(x), x, cfrac_log(x, n), x, taylor_log(x, n));
 
         }
+    }else if (argc == 5)
+    {
+        
     }
     return 0;
 }
