@@ -68,6 +68,25 @@ double taylor_pow(double x, double y, unsigned int n){
     return s;
 }
 
+double taylorcf_pow(double x, double y, unsigned int n){
+
+    double s = 1;
+    unsigned int i = 0;
+    double fact = 1;
+    double cy = 1;
+    double log = 1;
+
+    while (i<n){
+        i++;
+        fact *= i;
+        cy *= y;
+        log *= cfrac_log(x, n);
+        s += cy*log/fact;
+    }
+
+    return s;
+}
+
 
 int main(int argc, char *argv[]){
 
@@ -92,6 +111,7 @@ int main(int argc, char *argv[]){
 
             printf("         pow(%g,%g) = %.12g\n", x, y, pow(x, y));
             printf("  taylor_pow(%g,%g) = %.12g\n", x, y, taylor_pow(x, y, n));
+            printf("taylorcf_pow(%g,%g) = %.12g\n", x, y, taylorcf_pow(x, y, n));
         }
     }
     return 0;
