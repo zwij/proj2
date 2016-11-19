@@ -49,6 +49,25 @@ double cfrac_log(double x, unsigned int n){
     return s;
 }
 
+double taylor_pow(double x, double y, unsigned int n){
+
+    double s = 1;
+    unsigned int i = 0;
+    double fact = 1;
+    double cy = 1;
+    double log = 1;
+
+    while (i<n){
+        i++;
+        fact *= i;
+        cy *= y;
+        log *= taylor_log(x, n);
+        s += cy*log/fact;
+    }
+
+    return s;
+}
+
 
 int main(int argc, char *argv[]){
 
@@ -58,12 +77,22 @@ int main(int argc, char *argv[]){
             double x = strtod(argv[2], NULL);
             unsigned int n = atoi(argv[3]);
 
-            printf("       log(%g) = %.12g\n cfrac_log(%g) = %.12g\ntaylor_log(%g) = %.12g\n", x, log(x), x, cfrac_log(x, n), x, taylor_log(x, n));
+            printf("       log(%g) = %.12g\n", x, log(x));
+            printf(" cfrac_log(%g) = %.12g\n", x, cfrac_log(x, n));
+            printf("taylor_log(%g) = %.12g\n", x, taylor_log(x, n));
 
         }
     }else if (argc == 5)
     {
-        
+        if (strcmp(argv[1], "--pow")==0)
+        {
+            double x = strtod(argv[2], NULL);
+            double y = strtod(argv[3], NULL);
+            unsigned int n = atoi(argv[4]);
+
+            printf("         pow(%g,%g) = %.12g\n", x, y, pow(x, y));
+            printf("  taylor_pow(%g,%g) = %.12g\n", x, y, taylor_pow(x, y, n));
+        }
     }
     return 0;
 }
