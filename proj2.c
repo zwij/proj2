@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
 
 double taylor_log(double x, unsigned int n){
 
@@ -95,10 +96,13 @@ int main(int argc, char *argv[]){
 
             double x = strtod(argv[2], NULL);
             unsigned int n = atoi(argv[3]);
-
-            printf("       log(%g) = %.12g\n", x, log(x));
-            printf(" cfrac_log(%g) = %.12g\n", x, cfrac_log(x, n));
-            printf("taylor_log(%g) = %.12g\n", x, taylor_log(x, n));
+            
+            if (isdigit(n)==0)
+            {
+                printf("       log(%g) = %.12g\n", x, log(x));
+                printf(" cfrac_log(%g) = %.12g\n", x, cfrac_log(x, n));
+                printf("taylor_log(%g) = %.12g\n", x, taylor_log(x, n));
+            }
 
         }
     }else if (argc == 5)

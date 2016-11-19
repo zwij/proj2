@@ -1,4 +1,4 @@
-CFLAGS=-std=c99 -Wall -Wextra -Werror
+CFLAGS=-std=c99 -pedantic -Wall -Wextra -Werror
 
 proj2: proj2.c
 	gcc $(CFLAGS) proj2.c -lm -o proj2
