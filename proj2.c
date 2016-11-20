@@ -28,6 +28,7 @@ double taylor_log(double x, unsigned int n){
             s += a/i++;
         }
     }
+
     return s;
 }
 
@@ -89,10 +90,11 @@ double taylorcf_pow(double x, double y, unsigned int n){
     return s;
 }
 
-bool isNumber(char *n){
+bool isWholePosNumber(char *n){
 
     int nLen = strlen(n);
     bool result;
+
     for (int i = 0; i< nLen; i++){
         if (isdigit(n[i]))
         {
@@ -106,36 +108,86 @@ bool isNumber(char *n){
     return result;
 }
 
+bool isNumber(char *x){
+	int xLen = strlen(x);
+	bool isDot = true;
+	bool isMinus = true;
+	bool result;
+
+	for (int i = 0; i< xLen; i++){
+        if (isdigit(x[i]))
+        {
+            result = true;
+        }else if ((isDot && i == 1) || (isDot && i == 2 && !isMinus)){
+        	if (x[i] == '.'){
+        		isDot = false;
+        	}else{
+        		result = false;
+        		break;
+        	}
+
+        }else if (isMinus && i == 0){
+        	if (x[i] == '-'){
+        		isMinus = false;
+        	}else{
+        		result = false;
+        		break;
+        	}
+        	
+        }else{
+        	result = false;
+        	break;
+        }
+    }
+
+    return result;
+}
+
 int main(int argc, char *argv[]){
 
     if (argc == 4){
-        if (strcmp(argv[1], "--log")==0 && isNumber(argv[3])){
+        if (strcmp(argv[1], "--log")==0 && isWholePosNumber(argv[3]) && isNumber(argv[2])){
 
             double x = strtod(argv[2], NULL);
             unsigned int n = atoi(argv[3]);
             
-            if (isdigit(n)==0)
+            if (n>0 && x>0)
             {
                 printf("       log(%g) = %.12g\n", x, log(x));
                 printf(" cfrac_log(%g) = %.12g\n", x, cfrac_log(x, n));
                 printf("taylor_log(%g) = %.12g\n", x, taylor_log(x, n));
+            }else{
+            	printf("Neočekávaný vstup!\n");
             }
 
         }else{
-            printf("Neočekávaný vstup!!!\n");
+            printf("Neočekávaný vstup!\n");
         }
+
     }else if (argc == 5)
     {
-        if (strcmp(argv[1], "--pow")==0)
+        if (strcmp(argv[1], "--pow")==0 && isWholePosNumber(argv[4]) && isNumber(argv[2]) && isNumber(argv[3]))
         {
             double x = strtod(argv[2], NULL);
             double y = strtod(argv[3], NULL);
             unsigned int n = atoi(argv[4]);
 
-            printf("         pow(%g,%g) = %.12g\n", x, y, pow(x, y));
-            printf("  taylor_pow(%g,%g) = %.12g\n", x, y, taylor_pow(x, y, n));
-            printf("taylorcf_pow(%g,%g) = %.12g\n", x, y, taylorcf_pow(x, y, n));
+            if (n>0 && x>0)
+            {
+            	printf("         pow(%g,%g) = %.12g\n", x, y, pow(x, y));
+            	printf("  taylor_pow(%g,%g) = %.12g\n", x, y, taylor_pow(x, y, n));
+            	printf("taylorcf_pow(%g,%g) = %.12g\n", x, y, taylorcf_pow(x, y, n));
+            }else{
+            	printf("Neočekávaný vstup!\n");
+            } 
+
+        }else{
+        	printf("Neočekávaný vstup!\n");
         }
+
+    }else{
+    	printf("Neočekávaný vstup!\n");
     }
+
     return 0;
 }
