@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 double taylor_log(double x, unsigned int n){
 
@@ -88,11 +89,27 @@ double taylorcf_pow(double x, double y, unsigned int n){
     return s;
 }
 
+bool isNumber(char *n){
+
+    int nLen = strlen(n);
+    bool result;
+    for (int i = 0; i< nLen; i++){
+        if (isdigit(n[i]))
+        {
+            result = true;
+        }else{
+            result = false;
+            break;
+        }
+    }
+
+    return result;
+}
 
 int main(int argc, char *argv[]){
 
     if (argc == 4){
-        if (strcmp(argv[1], "--log")==0){
+        if (strcmp(argv[1], "--log")==0 && isNumber(argv[3])){
 
             double x = strtod(argv[2], NULL);
             unsigned int n = atoi(argv[3]);
@@ -104,6 +121,8 @@ int main(int argc, char *argv[]){
                 printf("taylor_log(%g) = %.12g\n", x, taylor_log(x, n));
             }
 
+        }else{
+            printf("Neočekávaný vstup!!!\n");
         }
     }else if (argc == 5)
     {
