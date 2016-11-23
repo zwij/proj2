@@ -89,7 +89,7 @@ double taylorcf_pow(double x, double y, unsigned int n){ // funkce dle zadání
 
     return s; // vrácení sumy
 }
-
+/*
 bool isWholePosNumber(char *n){ // jestli je parametr celé kladné číslo
 
     int nLen = strlen(n); // zjištění délky (počtu znaků)
@@ -107,7 +107,8 @@ bool isWholePosNumber(char *n){ // jestli je parametr celé kladné číslo
 
     return result; // vrací výsledek 
 }
-
+*/
+/*
 bool isNumber(char *x){ // jestli parametr obsahuje jen čislo (včetně desetinného)
 
 	int xLen = strlen(x); // zjištění délky (počtu znaků)
@@ -143,16 +144,17 @@ bool isNumber(char *x){ // jestli parametr obsahuje jen čislo (včetně desetin
 
     return result; //vrací výsledek
 }
-
+*/
 int main(int argc, char *argv[]){
 
     if (argc == 4){ // pro 4 argumenty (--log)
-        if (strcmp(argv[1], "--log")==0 && isWholePosNumber(argv[3]) && isNumber(argv[2])){ // --log, N == celé kladné číslo, x == číslo
+        if (strcmp(argv[1], "--log")==0){ // --log, N == celé kladné číslo, x == číslo
 
-            double x = strtod(argv[2], NULL); // deklarace x -> převedení parametru na double
-            unsigned int n = atoi(argv[3]); // deklarace n -> převedení parametru na int (unsigned)
+            char *ptrLogX, *ptrLogn;
+            double x = strtod(argv[2], &ptrLogX); // deklarace x -> převedení parametru na double
+            unsigned int n = strtol(argv[3], &ptrLogn, 10); // deklarace n -> převedení parametru na int (unsigned)
             
-            if (n>0 && x>0) // jestli je počet průchodů > 0, jestli je x > 0 (dle zadání)
+            if (n>0 && x>0 && *ptrLogX == '\0' && *ptrLogn == '\0') // jestli je počet průchodů > 0, jestli je x > 0 (dle zadání)
             {
                 printf("       log(%g) = %.12g\n", x, log(x)); // výpis kontrolní hodnoty (dle zadání)
                 printf(" cfrac_log(%g) = %.12g\n", x, cfrac_log(x, n)); // výpis cfrac_log (dle zadání)
@@ -160,20 +162,21 @@ int main(int argc, char *argv[]){
             }else{
             	printf("Neočekávaný vstup!\n"); // neočekávaný vstup
             }
-
+            
         }else{
             printf("Neočekávaný vstup!\n"); // neočekávaný vstup
         }
 
     }else if (argc == 5) // pro 5 argumentů (--pow)
     {
-        if (strcmp(argv[1], "--pow")==0 && isWholePosNumber(argv[4]) && isNumber(argv[2]) && isNumber(argv[3])) // --pow, N == celé kladné číslo, x && y == číslo
+        if (strcmp(argv[1], "--pow")==0) // --pow, N == celé kladné číslo, x && y == číslo
         {
-            double x = strtod(argv[2], NULL); // deklarace x -> převedení parametru na double
-            double y = strtod(argv[3], NULL); // deklarace x -> převedení parametru na double
-            unsigned int n = atoi(argv[4]); // deklarace n -> převedení parametru na int (unsigned)
+            char *ptrPowX, *ptrPowY, *ptrPown;
+            double x = strtod(argv[2], &ptrPowX); // deklarace x -> převedení parametru na double
+            double y = strtod(argv[3], &ptrPowY); // deklarace x -> převedení parametru na double
+            unsigned int n = strtol(argv[4], &ptrPown, 10); // deklarace n -> převedení parametru na int (unsigned)
 
-            if (n>0 && x>0) // jestli je počet průchodů > 0, jestli je x > 0 (dle zadání)
+            if (n>0 && x>0 && *ptrPowY == '\0' && *ptrPowX == '\0' && *ptrPown == '\0') // jestli je počet průchodů > 0, jestli je x > 0 (dle zadání)
             {
             	printf("         pow(%g,%g) = %.12g\n", x, y, pow(x, y)); // výpis kontrolní hodnoty (dle zadání)
             	printf("  taylor_pow(%g,%g) = %.12g\n", x, y, taylor_pow(x, y, n)); // výpis taylor_pow (dle zadání)
