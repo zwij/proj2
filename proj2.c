@@ -56,16 +56,12 @@ double taylor_pow(double x, double y, unsigned int n){ // stejné jako taylorcf_
 
     double s = 1;
     unsigned int i = 0;
-    double fact = 1;
-    double cy = 1;
-    double log = 1;
+    double zlomek = 1;
 
     while (i<n){
         i++;
-        fact *= i;
-        cy *= y;
-        log *= taylor_log(x, n);
-        s += cy*log/fact;
+        zlomek *= (y*taylor_log(x, n))/i;
+        s += zlomek;
     }
 
     return s;
@@ -75,16 +71,12 @@ double taylorcf_pow(double x, double y, unsigned int n){ // funkce dle zadání
 
     double s = 1; // suma -> výchozí hodnota = 1
     unsigned int i = 0; // iterace
-    double fact = 1; // hodnota faktoriálu -> výchozí hodnota 1 (pro možnost násobení)
-    double cy = 1; // proměnná pro násobení proměnné y
-    double log = 1; // hodnota logaritmu -> výchozí hodnota 1 (pro možnost násobení)
+    double zlomek = 1; // proměnná pro násobení zlomku
 
     while (i<n){ // cyklus podle počtu iterací
         i++;
-        fact *= i; // zvýšení faktoriálu
-        cy *= y; // vynásobení (mocnění) y (ze vzorce v zadání)
-        log *= cfrac_log(x, n); //vynásobení (mocnění) hodnoty logaritmu za pomocí vlastní fce (ze vzorce v zadání)
-        s += cy*log/fact; // přičtění aktuálního členu
+        zlomek *= (y*cfrac_log(x, n))/i; //vynásobení (mocnění) hodnoty zlomku za pomocí vlastní fce (ze vzorce v zadání)
+        s += zlomek; // přičtění aktuálního členu
     }
 
     return s; // vrácení sumy
@@ -93,50 +85,55 @@ double taylorcf_pow(double x, double y, unsigned int n){ // funkce dle zadání
 int main(int argc, char *argv[]){
 
     if (argc == 4){ // pro 4 argumenty (--log)
-        if (strcmp(argv[1], "--log")==0){ // --log, N == celé kladné číslo, x == číslo
+        if (strcmp(argv[1], "--log")==0){ // --log
 
-            char *ptrLogX, *ptrLogn;
+            char *ptrLogX, *ptrLogn; // pointer
             double x = strtod(argv[2], &ptrLogX); // deklarace x -> převedení parametru na double
             unsigned int n = strtol(argv[3], &ptrLogn, 10); // deklarace n -> převedení parametru na int (unsigned)
             
-            if (n>0 && x>0 && *ptrLogX == '\0' && *ptrLogn == '\0') // jestli je počet průchodů > 0, jestli je x > 0 (dle zadání)
+            if (n>0 && x>0 && *ptrLogX == '\0' && *ptrLogn == '\0') // počet průchodů > 0, x > 0, porovnání pointeru
             {
                 printf("       log(%g) = %.12g\n", x, log(x)); // výpis kontrolní hodnoty (dle zadání)
                 printf(" cfrac_log(%g) = %.12g\n", x, cfrac_log(x, n)); // výpis cfrac_log (dle zadání)
                 printf("taylor_log(%g) = %.12g\n", x, taylor_log(x, n)); // výpis taylor_log (dle zadání)
             }else{
-            	printf("Neočekávaný vstup!\n"); // neočekávaný vstup
+            	fprintf(stderr, "Neočekávaný vstup!\n"); // neočekávaný vstup
+                return EXIT_FAILURE;
             }
             
         }else{
-            printf("Neočekávaný vstup!\n"); // neočekávaný vstup
+            fprintf(stderr, "Neočekávaný vstup!\n"); // neočekávaný vstup
+            return EXIT_FAILURE;
         }
 
     }else if (argc == 5) // pro 5 argumentů (--pow)
     {
-        if (strcmp(argv[1], "--pow")==0) // --pow, N == celé kladné číslo, x && y == číslo
+        if (strcmp(argv[1], "--pow")==0) // --pow
         {
-            char *ptrPowX, *ptrPowY, *ptrPown;
+            char *ptrPowX, *ptrPowY, *ptrPown; // pointery
             double x = strtod(argv[2], &ptrPowX); // deklarace x -> převedení parametru na double
             double y = strtod(argv[3], &ptrPowY); // deklarace x -> převedení parametru na double
             unsigned int n = strtol(argv[4], &ptrPown, 10); // deklarace n -> převedení parametru na int (unsigned)
 
-            if (n>0 && x>0 && *ptrPowY == '\0' && *ptrPowX == '\0' && *ptrPown == '\0') // jestli je počet průchodů > 0, jestli je x > 0 (dle zadání)
+            if (n>0 && x>0 && *ptrPowY == '\0' && *ptrPowX == '\0' && *ptrPown == '\0') // počet průchodů > 0, x > 0, porovnání pointeru
             {
             	printf("         pow(%g,%g) = %.12g\n", x, y, pow(x, y)); // výpis kontrolní hodnoty (dle zadání)
             	printf("  taylor_pow(%g,%g) = %.12g\n", x, y, taylor_pow(x, y, n)); // výpis taylor_pow (dle zadání)
             	printf("taylorcf_pow(%g,%g) = %.12g\n", x, y, taylorcf_pow(x, y, n)); // výpis taylorcf_pow (dle zadání)
             }else{
-            	printf("Neočekávaný vstup!\n"); // neočekávaný vstup
+            	fprintf(stderr, "Neočekávaný vstup!\n"); // neočekávaný vstup
+                return EXIT_FAILURE;
             } 
 
         }else{
-        	printf("Neočekávaný vstup!\n"); // neočekávaný vstup
+        	fprintf(stderr, "Neočekávaný vstup!\n"); // neočekávaný vstup
+            return EXIT_FAILURE;
         }
 
     }else{
-    	printf("Neočekávaný vstup!\n"); // neočekávaný vstup
+    	fprintf(stderr, "Neočekávaný vstup!\n"); // neočekávaný vstup
+        return EXIT_FAILURE;
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
