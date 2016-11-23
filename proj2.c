@@ -7,6 +7,9 @@
 
 double taylor_log(double x, unsigned int n){ // funkce dle zadání
 
+    if (x == 0) return -INFINITY;
+    if (x < 0) return NAN;
+
     double s; // suma
     double a; // proměnná pro hodnotu, se kterou se bude pracovat
     unsigned int i = 1; // iterace
@@ -34,6 +37,9 @@ double taylor_log(double x, unsigned int n){ // funkce dle zadání
 
 double cfrac_log(double x, unsigned int n){ // funkce dle zadání
 
+    if (x == 0) return -INFINITY;
+    if (x < 0) return NAN;
+
     double s = 0; // proměnná pro výsledek
     double a = (x-1)/(x+1); // převedení hodnoty (dle vzorce v zadání)
     unsigned int i = 1; //iterace
@@ -54,28 +60,33 @@ double cfrac_log(double x, unsigned int n){ // funkce dle zadání
 
 double taylor_pow(double x, double y, unsigned int n){ // stejné jako taylorcf_pow s využitím taylor_log
 
+    if (x <= 0) return NAN;
+
     double s = 1;
     unsigned int i = 0;
     double zlomek = 1;
+    const double log = taylor_log(x, n);
 
     while (i<n){
         i++;
-        zlomek *= (y*taylor_log(x, n))/i;
+        zlomek *= (y*log)/i;
         s += zlomek;
     }
-
     return s;
 }
 
 double taylorcf_pow(double x, double y, unsigned int n){ // funkce dle zadání
 
+    if (x <= 0) return NAN;
+
     double s = 1; // suma -> výchozí hodnota = 1
     unsigned int i = 0; // iterace
     double zlomek = 1; // proměnná pro násobení zlomku
+    const double log = cfrac_log(x, n);
 
     while (i<n){ // cyklus podle počtu iterací
         i++;
-        zlomek *= (y*cfrac_log(x, n))/i; //vynásobení (mocnění) hodnoty zlomku za pomocí vlastní fce (ze vzorce v zadání)
+        zlomek *= (y*log)/i; //vynásobení (mocnění) hodnoty zlomku za pomocí vlastní fce (ze vzorce v zadání)
         s += zlomek; // přičtění aktuálního členu
     }
 
@@ -113,10 +124,11 @@ double mylog(double x){
         s = (2*a)/(j-s); // konečný výpočet
     }
     //printf("rozdil:%.17e, s: %.8e, ps:%a\n", fabs(s - ps), s, ps);
-
-    s *= 1e7;
+    /*
+    s *= 1e8;
     s = ceil(s);
-    s /= 1e7;
+    s /= 1e8;
+    */
     vysledky = s;
 
     return vysledky;
@@ -131,7 +143,7 @@ int main(int argc, char *argv[]){
             double x = strtod(argv[2], &ptrLogX); // deklarace x -> převedení parametru na double
             unsigned int n = strtol(argv[3], &ptrLogn, 10); // deklarace n -> převedení parametru na int (unsigned)
             
-            if (n>0 && x>0 && *ptrLogX == '\0' && *ptrLogn == '\0') // počet průchodů > 0, x > 0, porovnání pointeru
+            if (n>0 && *ptrLogX == '\0' && *ptrLogn == '\0') // počet průchodů > 0, x > 0, porovnání pointeru
             {
                 printf("       log(%g) = %.12g\n", x, log(x)); // výpis kontrolní hodnoty (dle zadání)
                 printf(" cfrac_log(%g) = %.12g\n", x, cfrac_log(x, n)); // výpis cfrac_log (dle zadání)
@@ -155,7 +167,7 @@ int main(int argc, char *argv[]){
             double y = strtod(argv[3], &ptrPowY); // deklarace x -> převedení parametru na double
             unsigned int n = strtol(argv[4], &ptrPown, 10); // deklarace n -> převedení parametru na int (unsigned)
 
-            if (n>0 && x>0 && *ptrPowY == '\0' && *ptrPowX == '\0' && *ptrPown == '\0') // počet průchodů > 0, x > 0, porovnání pointeru
+            if (n>0 && *ptrPowY == '\0' && *ptrPowX == '\0' && *ptrPown == '\0') // počet průchodů > 0, x > 0, porovnání pointeru
             {
             	printf("         pow(%g,%g) = %.12g\n", x, y, pow(x, y)); // výpis kontrolní hodnoty (dle zadání)
             	printf("  taylor_pow(%g,%g) = %.12g\n", x, y, taylor_pow(x, y, n)); // výpis taylor_pow (dle zadání)
