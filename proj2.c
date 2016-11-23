@@ -95,6 +95,39 @@ double taylorcf_pow(double x, double y, unsigned int n){ // funkce dle zadání
 
 double mylog(double x){
 
+    if (x == 0) return -INFINITY;
+    if (x < 0) return NAN;
+/*
+    double vysledky;
+    double s; // suma
+    double a; // proměnná pro hodnotu, se kterou se bude pracovat
+    unsigned int i = 1; // iterace
+    const double slog = log(x);
+    const double eps = 1e-8;
+    unsigned int it = 0; 
+
+    if (x<1){ // pro x < 1
+        s = -(1-x); // první hodnota
+        a = 1-x; // převedení hodnoty dle vzorce v zadání
+
+        while(fabs(s - slog)>=eps){ // cyklus podle počtu iterací
+            a *= (1-x); // vynásobení proměnné 'a' základem ze vzorce
+            s -= a/++i; // výpočet sumy
+            it++;
+        }
+    }else{
+        s = 0; //výchozí hodnota
+        a = 1; // výchozí hodnota
+
+        while(fabs(s - slog)>=eps){ // cyklus podle počtu iterací
+            a *= ((x-1)/x); // vynásobení proměnné 'a' vzorcem 
+            s += a/i++; // výpočet sumy
+            it++;
+        }
+    }
+
+ */   
+    
     double vysledky;
     unsigned int n = 0;
     double a = (x-1)/(x+1); // převedení hodnoty (dle vzorce v zadání)
@@ -104,8 +137,9 @@ double mylog(double x){
     unsigned int i;
     double ps = -1;
     const double eps = 1e-9;
+    unsigned int it = 0;
 
-    while (fabs(s - ps)>eps){
+    while (fabs(s - ps)>=eps){
         i=1;
         n++;
         //printf("rozdil:%.17e, s: %.8e, ps:%a\n", fabs(ps - s), s, ps);
@@ -119,6 +153,7 @@ double mylog(double x){
             j -= 2; // snížení hodnoty o 2
             cn--; // snížení hodnoty, která se bude mocnit
             i++;
+            it++;
         }
 
         s = (2*a)/(j-s); // konečný výpočet
@@ -130,8 +165,39 @@ double mylog(double x){
     s /= 1e8;
     */
     vysledky = s;
+    printf("%d\n", it);
 
     return vysledky;
+}
+
+double mypow(double x, double y){
+
+    if (x <= 0) return NAN;
+
+    unsigned int n = 0;
+    double s = INFINITY; // suma -> výchozí hodnota = 1
+    unsigned int i = 0; // iterace
+    double zlomek = 1; // proměnná pro násobení zlomku
+    const double eps = 1e-12;
+    const double spow = pow(x, y);
+    double log;
+
+    while (fabs(s - spow)>=eps){
+
+        i = 0;
+        n++;
+        log = cfrac_log(x, n);
+        s = 1;
+        zlomek = 1;
+
+        while (i<n){ // cyklus podle počtu iterací
+            i++;
+            zlomek *= (y*log)/i; //vynásobení (mocnění) hodnoty zlomku za pomocí vlastní fce (ze vzorce v zadání)
+            s += zlomek; // přičtění aktuálního členu
+        }
+    }    
+
+    return s; // vrácení sumy
 }
 
 int main(int argc, char *argv[]){
@@ -150,6 +216,21 @@ int main(int argc, char *argv[]){
                 printf("taylor_log(%g) = %.12g\n", x, taylor_log(x, n)); // výpis taylor_log (dle zadání)
             }else{
             	fprintf(stderr, "Neočekávaný vstup!\n"); // neočekávaný vstup
+                return EXIT_FAILURE;
+            }
+
+        }else if (strcmp(argv[1], "--mypow")==0){
+
+            char *ptrLogX; // pointer
+            char *ptrLogY; // pointer
+            double x = strtod(argv[2], &ptrLogX); // deklarace x -> převedení parametru na double
+            double y = strtod(argv[3], &ptrLogY); // deklarace y -> převedení parametru na double
+            
+            if (*ptrLogX == '\0' && *ptrLogY == '\0'){
+                printf("  pow(%g, %g)%.7e\n", x, y, pow(x, y));
+                printf("mypow(%g, %g)%.7e\n", x, y, mypow(x, y));
+            }else{
+                fprintf(stderr, "Neočekávaný vstup!\n"); // neočekávaný vstup
                 return EXIT_FAILURE;
             }
             
@@ -187,8 +268,13 @@ int main(int argc, char *argv[]){
             char *ptrLogX; // pointer
             double x = strtod(argv[2], &ptrLogX); // deklarace x -> převedení parametru na double
             
-            printf("%.7e\n", mylog(x));
-            printf("%.7e\n", log(x));
+            if (*ptrLogX == '\0'){
+                printf("  log(%g)%.7e\n", x, log(x));
+                printf("mylog(%g)%.7e\n", x, mylog(x));
+            }else{
+                fprintf(stderr, "Neočekávaný vstup!\n"); // neočekávaný vstup
+                return EXIT_FAILURE;
+            }
         }else{
             fprintf(stderr, "Neočekávaný vstup!\n"); // neočekávaný vstup
             return EXIT_FAILURE;
