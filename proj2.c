@@ -89,62 +89,7 @@ double taylorcf_pow(double x, double y, unsigned int n){ // funkce dle zadání
 
     return s; // vrácení sumy
 }
-/*
-bool isWholePosNumber(char *n){ // jestli je parametr celé kladné číslo
 
-    int nLen = strlen(n); // zjištění délky (počtu znaků)
-    bool result; // výsledek (návratová hodnota)
-
-    for (int i = 0; i< nLen; i++){ // projde všechny znaky
-        if (isdigit(n[i])) // jestli je číslo
-        {
-            result = true; // vrací true
-        }else{
-            result = false; //jestli není číslo -> vrací false
-            break; // konec
-        }
-    }
-
-    return result; // vrací výsledek 
-}
-*/
-/*
-bool isNumber(char *x){ // jestli parametr obsahuje jen čislo (včetně desetinného)
-
-	int xLen = strlen(x); // zjištění délky (počtu znaků)
-	bool isDot = true; // jestli obsahuje tečku
-	bool isMinus = true; // jesti je záporné
-	bool result; // výsledek (návratová hodnota)
-
-	for (int i = 0; i< xLen; i++){ // projde všechny znaky
-        if (isdigit(x[i])) // jestli je číslo
-        {
-            result = true; // vrací true
-        }else if ((isDot && i == 1) || (isDot && i == 2 && !isMinus)){ // jestli není číslo, tak může být tečka a to buď na 2. pozici, při záporné hodnotě na 3. pozici
-        	if (x[i] == '.'){ // jestli obsahuje tečku
-        		isDot = false; // pak ji už obsahovat nemůže
-        	}else{
-        		result = false; // jestli není tečka -> vrací false
-        		break; // konec
-        	}
-
-        }else if (isMinus && i == 0){ // na první pozici může být '-' -> číslo je záporné
-        	if (x[i] == '-'){ // jestli obsahuje mínus
-        		isMinus = false; // pak ji už obsahovat nemůže
-        	}else{
-        		result = false; // jestli není mínus -> vrací false
-        		break; //konec
-        	}
-        	
-        }else{
-        	result = false; // jestli není číslo -> vrací false
-        	break; // konec
-        }
-    }
-
-    return result; //vrací výsledek
-}
-*/
 int main(int argc, char *argv[]){
 
     if (argc == 4){ // pro 4 argumenty (--log)
