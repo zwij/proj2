@@ -82,6 +82,46 @@ double taylorcf_pow(double x, double y, unsigned int n){ // funkce dle zadání
     return s; // vrácení sumy
 }
 
+double mylog(double x){
+
+    double vysledky;
+    unsigned int n = 0;
+    double a = (x-1)/(x+1); // převedení hodnoty (dle vzorce v zadání)
+    double s = 0;
+    double cn;
+    unsigned int j;
+    unsigned int i;
+    double ps = -1;
+    const double eps = 1e-9;
+
+    while (fabs(s - ps)>eps){
+        i=1;
+        n++;
+        //printf("rozdil:%.17e, s: %.8e, ps:%a\n", fabs(ps - s), s, ps);
+        ps = s;
+        s = 0;
+        cn = n - 1; // proměnná pro výpočet hodnoty ve vzorci (mocniny)
+        j = n*2-1; // hodnota od které se odčítají zlomky
+
+        while (n>1 && i<n){
+            s = ((cn*cn)*(a*a))/(j-s); // výsledek jednoho členu včetně odečtení
+            j -= 2; // snížení hodnoty o 2
+            cn--; // snížení hodnoty, která se bude mocnit
+            i++;
+        }
+
+        s = (2*a)/(j-s); // konečný výpočet
+    }
+    //printf("rozdil:%.17e, s: %.8e, ps:%a\n", fabs(s - ps), s, ps);
+
+    s *= 1e7;
+    s = ceil(s);
+    s /= 1e7;
+    vysledky = s;
+
+    return vysledky;
+}
+
 int main(int argc, char *argv[]){
 
     if (argc == 4){ // pro 4 argumenty (--log)
@@ -129,7 +169,18 @@ int main(int argc, char *argv[]){
         	fprintf(stderr, "Neočekávaný vstup!\n"); // neočekávaný vstup
             return EXIT_FAILURE;
         }
-
+    }else if (argc == 3){
+        if (strcmp(argv[1], "--mylog")==0) // --pow
+        {
+            char *ptrLogX; // pointer
+            double x = strtod(argv[2], &ptrLogX); // deklarace x -> převedení parametru na double
+            
+            printf("%.7e\n", mylog(x));
+            printf("%.7e\n", log(x));
+        }else{
+            fprintf(stderr, "Neočekávaný vstup!\n"); // neočekávaný vstup
+            return EXIT_FAILURE;
+        }
     }else{
     	fprintf(stderr, "Neočekávaný vstup!\n"); // neočekávaný vstup
         return EXIT_FAILURE;
